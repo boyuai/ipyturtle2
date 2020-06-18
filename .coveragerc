@@ -1,0 +1,2 @@
+[run]
+omit = ipyturtle2/tests/*

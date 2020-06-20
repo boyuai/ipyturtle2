@@ -153,6 +153,9 @@ class TurtleView extends DOMWidgetView {
       } else if (type === 'write') {
         const { text, align, font, x, y, color } = command;
         this.writeText(text, align, font, x, y, color);
+      } else if (type === 'dot') {
+        const { x, y, size, color } = command;
+        this.drawDot(x, y, size, color);
       }
       this.lastCommandId = id;
     })
@@ -186,6 +189,17 @@ class TurtleView extends DOMWidgetView {
     context.textAlign = align as CanvasTextAlign;
     context.fillStyle = color;
     context.fillText(text, textX, textY);
+    context.restore();
+  }
+
+  drawDot(x: number, y: number, radius: number, color: string) {
+    const context = this.canvas!.getContext('2d') as CanvasRenderingContext2D;
+    context.save();
+    context.setTransform(1, 0, 0, -1, this.canvas!.width / 2, this.canvas!.height / 2);
+    context.fillStyle = color;
+    context.beginPath();
+    context.arc(x, y, radius, 0, 2 * Math.PI);
+    context.fill();
     context.restore();
   }
 }

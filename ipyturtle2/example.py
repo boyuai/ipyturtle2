@@ -123,12 +123,6 @@ class TurtleWidget(DOMWidget):
             degree = 90
         self.left(-degree)
 
-    def penup(self):
-        self.is_pen_on = False
-
-    def pendown(self):
-        self.is_pen_on = True
-
     def isdown(self):
         return self.is_pen_on
 
@@ -179,5 +173,22 @@ class TurtleWidget(DOMWidget):
             "font": font,
             "x": self.turtle_location_x,
             "y": self.turtle_location_y,
-            "color": self.pencolor,
+            "color": self.color,
+        }]
+    
+    def dot(self, size=None, color=None):
+        if size is None:
+            if self.pen_size < 4:
+                size = self.pen_size + 4
+            else:
+                size = self.pen_size * 2
+        if color is None:
+            color = self.color
+        self.commands = self.commands + [{
+            "type": "dot",
+            "id": round(time.time() * 1000),
+            "size": size,
+            "x": self.turtle_location_x,
+            "y": self.turtle_location_y,
+            "color": color,
         }]

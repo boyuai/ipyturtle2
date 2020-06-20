@@ -24,6 +24,31 @@ the nbextension:
 jupyter nbextension enable --py [--sys-prefix|--user|--system] ipyturtle2
 ```
 
+## Support Turtle Methods
+
+1. back
+2. dot
+3. forward
+4. goto
+5. heading
+6. hideturtle
+7. isdown
+8. isvisible
+9. left
+10. pencolor
+11. pendown
+12. pensize
+13. penup
+14. position
+15. reset
+16. right
+17. setpos
+18. setposition
+19. showturtle
+20. write: move is not supported
+
+All color params only support colorstring.
+
 ## Development
 
 ```bash

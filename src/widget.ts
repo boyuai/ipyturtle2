@@ -156,6 +156,9 @@ class TurtleView extends DOMWidgetView {
       } else if (type === 'dot') {
         const { x, y, size, color } = command;
         this.drawDot(x, y, size, color);
+      } else if (type === 'circle') {
+        const { x, y, radius, color, extent, lineWidth } = command;
+        this.drawCircle(x, y, radius, color, extent, lineWidth);
       }
       this.lastCommandId = id;
     })
@@ -200,6 +203,18 @@ class TurtleView extends DOMWidgetView {
     context.beginPath();
     context.arc(x, y, radius, 0, 2 * Math.PI);
     context.fill();
+    context.restore();
+  }
+
+  drawCircle(x: number, y: number, radius: number, color: string, extent: number, lineWidth: number) {
+    const context = this.canvas!.getContext('2d') as CanvasRenderingContext2D;
+    context.save();
+    context.setTransform(1, 0, 0, -1, this.canvas!.width / 2, this.canvas!.height / 2);
+    context.strokeStyle = color;
+    context.beginPath();
+    context.arc(x, y, radius, 0, 2 * Math.PI * (extent / 360));
+    context.lineWidth = lineWidth;
+    context.stroke();
     context.restore();
   }
 }

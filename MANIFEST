@@ -25,7 +25,6 @@ docs/source/examples/index.rst
 docs/source/examples/introduction.nblink
 examples/introduction.ipynb
 examples/.ipynb_checkpoints/introduction-checkpoint.ipynb
-examples/.ipynb_checkpoints/step2代码讲解-checkpoint.ipynb
 ipyturtle2/__init__.py
 ipyturtle2/_frontend.py
 ipyturtle2/_version.py

@@ -192,3 +192,17 @@ class TurtleWidget(DOMWidget):
             "y": self.turtle_location_y,
             "color": color,
         }]
+
+    def circle(self, radius, extent=None):
+        if extent is None:
+            extent = 360
+        self.commands = self.commands + [{
+            "type": "circle",
+            "id": round(time.time() * 1000),
+            "radius": radius,
+            "color": self.color,
+            "x": self.turtle_location_x,
+            "y": self.turtle_location_y,
+            "extent": extent,
+            "lineWidth": self.pen_size,
+        }]

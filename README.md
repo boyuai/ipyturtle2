@@ -27,25 +27,26 @@ jupyter nbextension enable --py [--sys-prefix|--user|--system] ipyturtle2
 ## Support Turtle Methods
 
 1. back
-2. dot
-3. forward
-4. goto
-5. heading
-6. hideturtle
-7. isdown
-8. isvisible
-9. left
-10. pencolor
-11. pendown
-12. pensize
-13. penup
-14. position
-15. reset
-16. right
-17. setpos
-18. setposition
-19. showturtle
-20. write: move is not supported
+2. circle: step is not supported
+3. dot
+4. forward
+5. goto
+6. heading
+7. hideturtle
+8. isdown
+9. isvisible
+10. left
+11. pencolor
+12. pendown
+13. pensize
+14. penup
+15. position
+16. reset
+17. right
+18. setpos
+19. setposition
+20. showturtle
+21. write: move is not supported
 
 All color params only support colorstring.
 

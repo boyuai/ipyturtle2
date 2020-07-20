@@ -24,6 +24,7 @@ docs/source/_static/helper.js
 docs/source/examples/index.rst
 docs/source/examples/introduction.nblink
 examples/introduction.ipynb
+examples/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 examples/.ipynb_checkpoints/introduction-checkpoint.ipynb
 ipyturtle2/__init__.py
 ipyturtle2/_frontend.py

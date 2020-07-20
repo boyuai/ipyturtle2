@@ -42,6 +42,8 @@ class TurtleWidget(DOMWidget):
     color = Unicode('black').tag(sync=True)
     pen_size = Int(1).tag(sync=True)
 
+    _command_id = 0
+
     def __init__(self, width=320, height=320, fixed=True):
         DOMWidget.__init__(self)
         self.canvas_width = width
@@ -58,6 +60,10 @@ class TurtleWidget(DOMWidget):
         self.turtle_heading_x = 0.0
         self.turtle_heading_y = 1.0
         self.color = 'black'
+
+    def _incr_id(self):
+        self._command_id += 1
+        return self._command_id
 
     def position(self):
         return self.turtle_location_x, self.turtle_location_y
@@ -81,7 +87,7 @@ class TurtleWidget(DOMWidget):
                 "dx": self.turtle_location_x,
                 "dy": self.turtle_location_y,
                 "color": self.color,
-                "id": round(time.time() * 1000),
+                "id": self._incr_id(),
                 "lineWidth": self.pen_size,
             }]
 
@@ -141,7 +147,7 @@ class TurtleWidget(DOMWidget):
         self._reset()
         self.commands = self.commands + [{
             "type": "clear",
-            "id": round(time.time() * 1000),
+            "id": self._incr_id(),
         }]
 
     def pencolor(self,r = -1, g = -1, b = -1):
@@ -161,13 +167,13 @@ class TurtleWidget(DOMWidget):
     def _update_turtle(self):
         self.commands = self.commands + [{
             "type": "updateTurtle",
-            "id": round(time.time() * 1000),
+            "id": self._incr_id(),
         }]
 
     def write(self, text, move=False, align='left', font=("Arial", 8, "normal")):
         self.commands = self.commands + [{
             "type": "write",
-            "id": round(time.time() * 1000),
+            "id": self._incr_id(),
             "text": text,
             "align": align,
             "font": font,
@@ -186,7 +192,7 @@ class TurtleWidget(DOMWidget):
             color = self.color
         self.commands = self.commands + [{
             "type": "dot",
-            "id": round(time.time() * 1000),
+            "id": self._incr_id(),
             "size": size,
             "x": self.turtle_location_x,
             "y": self.turtle_location_y,
@@ -198,7 +204,7 @@ class TurtleWidget(DOMWidget):
             extent = 360
         self.commands = self.commands + [{
             "type": "circle",
-            "id": round(time.time() * 1000),
+            "id": self._incr_id(),
             "radius": radius,
             "color": self.color,
             "x": self.turtle_location_x,

@@ -66,7 +66,9 @@ class TurtleView extends DOMWidgetView {
     this.div.style.height = canvasHeight + 'px';
     this.div.style.border = 'thin solid #0000FF'
     this.div.style.background = '#efefef';
+    this.div.style.cursor = 'move';
     this.div.className = 'turtle_div';
+    this.div.setAttribute('draggable', 'true');
     this.canvas = document.createElement('canvas');
     this.canvas.setAttribute('width', canvasWidth.toString());
     this.canvas.setAttribute('height', canvasHeight.toString());
@@ -79,6 +81,7 @@ class TurtleView extends DOMWidgetView {
     this.clearImageData = context!.getImageData(0, 0, this.canvas.width, this.canvas.height);
         
     this.drawTurtle();
+    this.bindMouseEvent(); // 点击可拖动窗口
     this.update(); // 恢复历史情况
   }
 
@@ -130,6 +133,32 @@ class TurtleView extends DOMWidgetView {
 
   clear() {
     this.canvas!.getContext('2d')!.putImageData(this.clearImageData as ImageData, 0, 0);
+  }
+
+  bindMouseEvent() {
+    let x = 0;
+    let y = 0;
+    let x1 = 0;
+    let y1 = 0;
+    this.div!.addEventListener('dragstart', (e) => {
+      x1 = e.clientX;
+      y1 = e.clientY;
+    }, false);
+    this.div!.addEventListener('drag', (e) => {
+      e.preventDefault();
+      if (!e.clientX) {
+        return;
+      }
+      x = x1 - e.clientX;
+      y = y1 - e.clientY;
+      x1 = e.clientX;
+      y1 = e.clientY;
+      this.div!.style.top = (this.div!.offsetTop - y) + 'px';
+      this.div!.style.left = (this.div!.offsetLeft - x) + 'px';
+    });
+    this.div!.addEventListener('dragover', e => {
+      e.preventDefault();
+    });
   }
 
   update() {

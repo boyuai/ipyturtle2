@@ -1,6 +1,6 @@
 {
   "name": "ipyturtle2",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Turtle implemention for Jupyter Notebook",
   "keywords": [
     "jupyter",

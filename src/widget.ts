@@ -67,6 +67,7 @@ class TurtleView extends DOMWidgetView {
     this.div.style.border = 'thin solid #0000FF'
     this.div.style.background = '#efefef';
     this.div.style.cursor = 'move';
+    this.div.style.zIndex = '999';
     this.div.className = 'turtle_div';
     this.div.setAttribute('draggable', 'true');
     this.canvas = document.createElement('canvas');

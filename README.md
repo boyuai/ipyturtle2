@@ -5,26 +5,22 @@ Turtle implemention for Jupyter Notebook
 
 ## Installation
 
-You can install using `pip`:
+if you use jupyterlab:
 
 ```bash
 pip install ipyturtle2
-```
-
-Or if you use jupyterlab:
-
-```bash
-pip install ipyturtle2
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter labextension install @jupyter-widgets/jupyterlab-manager --minimize=False
+jupyter labextension install ipyturtle2
 ```
 
 If you are using Jupyter Notebook 5.2 or earlier, you may also need to enable
 the nbextension:
 ```bash
-jupyter nbextension enable --py [--sys-prefix|--user|--system] ipyturtle2
+pip install ipyturtle2
+jupyter nbextension enable --py --sys-prefix ipyturtle2
 ```
 
-## Support Turtle Methods
+## Supported Turtle Methods
 
 1. back
 2. circle: step is not supported
@@ -53,7 +49,7 @@ All color params only support colorstring.
 ## Development
 
 ```bash
-docker run --rm -it -p 8888:8888 -v $(pwd):/home/jovyan jupyter/minimal-notebook bash
+docker run --rm -it -p 8888:8888 -v $(pwd):/home/jovyan/ipyturtle2 jupyter/base-notebook bash
 ```
 
 ```bash
@@ -61,6 +57,12 @@ pip install -e ".[test, examples]"
 jupyter nbextension install --sys-prefix --symlink --overwrite --py ipyturtle2
 jupyter nbextension enable --sys-prefix --py ipyturtle2
 jupyter notebook
+```
+
+```bash
+jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
+jupyter labextension install --minimize=False .
+jupyter lab
 ```
 
 [http://localhost:8888](http://localhost:8888)

@@ -13,6 +13,12 @@ import {
 import '../css/widget.css'
 
 
+declare global {
+  interface Window {
+    __ipyturtle_on_image_data_change?: Function;
+  }
+}
+
 export
 class TurtleModel extends DOMWidgetModel {
   defaults() {
@@ -115,6 +121,18 @@ class TurtleView extends DOMWidgetView {
     context.setTransform(1, 0, 0, -1, this.canvas!.width / 2, this.canvas!.height / 2);
     // 保存当前画面（不包含turtle三角形，用于恢复）
     this.imageData = context.getImageData(0, 0, this.canvas!.width, this.canvas!.height);
+    // 添加hook可以保存到外部
+    if (typeof window.__ipyturtle_on_image_data_change === 'function') {
+      try {
+        this.canvas?.toBlob(async data => {
+          const buffer = await data?.arrayBuffer()!;
+          // let base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+          window.__ipyturtle_on_image_data_change!(buffer)
+        }, 'png');
+      } catch (e) {
+        console.log(e);
+      }
+    }
     context.strokeStyle = color;
     context.beginPath();
     context.moveTo(noseX, noseY);

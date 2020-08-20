@@ -46,6 +46,20 @@ jupyter nbextension enable --py --sys-prefix ipyturtle2
 
 All color params only support colorstring.
 
+For method support request, please open an issue.
+
+## Image Data Hook (pro use)
+
+When turtle pannel change, the function `window.__ipyturtle_on_image_data_change` will be called
+
+```js
+window.__ipyturtle_on_image_data_change = (data) => {
+    console.log(data); // image buffer
+    // to base64
+    // const base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+}
+```
+
 ## Development
 
 ```bash

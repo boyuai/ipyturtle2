@@ -15,7 +15,7 @@ import '../css/widget.css'
 
 declare global {
   interface Window {
-    __ipyturtle_on_image_data_change?: Function;
+    __ipyturtle_get_image_data?: Function;
   }
 }
 
@@ -89,6 +89,7 @@ class TurtleView extends DOMWidgetView {
         
     this.drawTurtle();
     this.bindMouseEvent(); // 点击可拖动窗口
+    this.registerHooks();
     this.update(); // 恢复历史情况
   }
 
@@ -121,18 +122,6 @@ class TurtleView extends DOMWidgetView {
     context.setTransform(1, 0, 0, -1, this.canvas!.width / 2, this.canvas!.height / 2);
     // 保存当前画面（不包含turtle三角形，用于恢复）
     this.imageData = context.getImageData(0, 0, this.canvas!.width, this.canvas!.height);
-    // 添加hook可以保存到外部
-    if (typeof window.__ipyturtle_on_image_data_change === 'function') {
-      try {
-        this.canvas?.toBlob(async data => {
-          const buffer = await data?.arrayBuffer()!;
-          // let base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));
-          window.__ipyturtle_on_image_data_change!(buffer)
-        }, 'png');
-      } catch (e) {
-        console.log(e);
-      }
-    }
     context.strokeStyle = color;
     context.beginPath();
     context.moveTo(noseX, noseY);
@@ -264,5 +253,16 @@ class TurtleView extends DOMWidgetView {
     context.lineWidth = lineWidth;
     context.stroke();
     context.restore();
+  }
+
+  registerHooks() {
+    // 外部可以获取图片内容
+    window.__ipyturtle_get_image_data = () => new Promise((resolve, reject) => {
+      this.canvas?.toBlob(async data => {
+        const buffer = await data?.arrayBuffer()!;
+        // let base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        resolve(buffer);
+      }, 'png');
+    });
   }
 }

@@ -50,14 +50,14 @@ For method support request, please open an issue.
 
 ## Image Data Hook (pro use)
 
-When turtle pannel change, the function `window.__ipyturtle_on_image_data_change` will be called
+You can use the function `window.__ipyturtle_get_image_data` to get turtle panel drawing result.
 
 ```js
-window.__ipyturtle_on_image_data_change = (data) => {
+window.__ipyturtle_get_image_data().then(data => {
     console.log(data); // image buffer
     // to base64
     // const base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));
-}
+})
 ```
 
 ## Development

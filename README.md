@@ -53,7 +53,8 @@ For method support request, please open an issue.
 You can use the function `window.__ipyturtle_get_image_data` to get turtle panel drawing result.
 
 ```js
-window.__ipyturtle_get_image_data().then(data => {
+const crop = false; // Set true to auto crop to contents
+window.__ipyturtle_get_image_data(crop).then(data => {
     console.log(data); // image buffer
     // to base64
     // const base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));

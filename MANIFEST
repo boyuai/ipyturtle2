@@ -39,6 +39,7 @@ ipyturtle2/tests/__init__.py
 ipyturtle2/tests/conftest.py
 ipyturtle2/tests/test_example.py
 ipyturtle2/tests/test_nbextension_path.py
+src/crop.ts
 src/extension.ts
 src/index.ts
 src/plugin.ts

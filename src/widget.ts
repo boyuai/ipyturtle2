@@ -11,6 +11,7 @@ import {
 
 // Import the CSS
 import '../css/widget.css'
+import cropImageFromCanvas from './crop';
 
 
 declare global {
@@ -257,8 +258,9 @@ class TurtleView extends DOMWidgetView {
 
   registerHooks() {
     // 外部可以获取图片内容
-    window.__ipyturtle_get_image_data = () => new Promise((resolve, reject) => {
-      this.canvas?.toBlob(async data => {
+    window.__ipyturtle_get_image_data = (crop?: boolean) => new Promise((resolve, reject) => {
+      const canvas = crop ? cropImageFromCanvas(this.canvas as HTMLCanvasElement) : this.canvas;
+      canvas?.toBlob(async data => {
         const buffer = await data?.arrayBuffer()!;
         // let base64String = btoa(String.fromCharCode(...new Uint8Array(buffer)));
         resolve(buffer);

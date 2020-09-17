@@ -202,13 +202,30 @@ class TurtleWidget(DOMWidget):
     def circle(self, radius, extent=None):
         if extent is None:
             extent = 360
+        start = self.turtle_heading - 90
+        centerX = self.turtle_location_x + radius * math.cos(math.radians(start + 180))
+        centerY = self.turtle_location_y + radius * math.sin(math.radians(start  + 180))
         self.commands = self.commands + [{
             "type": "circle",
             "id": self._incr_id(),
             "radius": radius,
             "color": self.color,
-            "x": self.turtle_location_x,
-            "y": self.turtle_location_y,
+            "x": centerX,
+            "y": centerY,
+            "start": start,
             "extent": extent,
             "lineWidth": self.pen_size,
         }]
+        nextX = centerX + radius * math.cos(math.radians(extent + start))
+        nextY = centerY + radius * math.sin(math.radians(extent + start))
+        self.goto(nextX, nextY)
+        self.left(extent)
+
+    def spiral_circle(self, steps, start_radius, radius_stride, angle_stride):
+        for i in range(steps):
+            self.circle(start_radius + i * radius_stride, angle_stride)
+
+    def spiral_forward(self, steps, start_arc_length, arc_length_stride, angle_stride):
+        for i in range(steps):
+            self.forward(start_arc_length + i * arc_length_stride)
+            self.left(angle_stride)

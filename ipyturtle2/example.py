@@ -60,6 +60,7 @@ class TurtleWidget(DOMWidget):
         self._turtle_location_y = 0
         self._turtle_heading = 90.0
         self._color = 'black'
+        self._fill_color = 'black'
 
     def _incr_id(self):
         self._command_id += 1

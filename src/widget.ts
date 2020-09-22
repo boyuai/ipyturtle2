@@ -312,13 +312,15 @@ export class TurtleView extends DOMWidgetView {
             command as SpiralCircleCommand
           );
         } else if (type === 'spiralForward') {
-          afterTurtle = this.drawSpiralForward(command as SpiralForwardCommand);
+          afterTurtle = await this.drawSpiralForward(
+            command as SpiralForwardCommand
+          );
         }
         this.drawTurtle({
           ...command,
           ...afterTurtle,
         });
-        await this.waitFrame(50);
+        await this.waitFrame(20);
       }
     }
 
@@ -529,7 +531,7 @@ export class TurtleView extends DOMWidgetView {
     this.fillPaths = [];
   }
 
-  rotationSpeed = 30;
+  rotationSpeed = 10;
 
   async rotateLeft(command: RotateCommand) {
     const { degree, x, y, heading } = command;
@@ -545,7 +547,7 @@ export class TurtleView extends DOMWidgetView {
         y,
         heading: heading + d,
       });
-      await this.waitFrame(20);
+      await this.waitFrame(5);
       this.clearTurtle();
       if (d === degree) {
         break;
@@ -820,7 +822,7 @@ export class TurtleView extends DOMWidgetView {
     } = command;
     for (let i = 0; i < steps; i++) {
       const distance = startArcLength + i * arcLengthStride;
-      this.clearTurtle();
+
       const after = await this.drawLine({
         ...command,
         type: 'line',
@@ -831,14 +833,6 @@ export class TurtleView extends DOMWidgetView {
       });
       x = after.x;
       y = after.y;
-      heading += angleStride;
-      this.drawTurtle({
-        ...command,
-        x,
-        y,
-        heading,
-      });
-      await this.waitFrame(20);
       const { heading: afterHeading } = await this.rotateLeft({
         ...command,
         type: 'left',
@@ -848,6 +842,14 @@ export class TurtleView extends DOMWidgetView {
         degree: angleStride,
       });
       heading = afterHeading;
+      // this.drawTurtle({
+      //   ...command,
+      //   x,
+      //   y,
+      //   heading,
+      // });
+      // await this.waitFrame(20);
+      // this.clearTurtle();
     }
     return {
       x,

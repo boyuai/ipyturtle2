@@ -270,8 +270,6 @@ export class TurtleView extends DOMWidgetView {
     let commands: Command[] = this.model.get('_commands') || [];
     let newCommands = commands.filter((c: any) => c.id > this.lastCommandId);
 
-    // console.log('newCommands', newCommands);
-
     if (newCommands.length > 0) {
       for (const command of newCommands) {
         // widget 被销毁了，停止循环
@@ -370,11 +368,11 @@ export class TurtleView extends DOMWidgetView {
    * @param heading 朝向
    */
   drawTurtle(command: BaseCommand) {
-    const { x, y, heading, color, fillColor } = command;
+    const { x, y, heading, color, fillColor, isTurtleOn } = command;
     // console.log('drawTurtle', x, y, heading);
     // console.log('drawTurtle', command);
 
-    if (!this.model.get('_is_turtle_on')) {
+    if (!isTurtleOn) {
       return;
     }
     const width = this.model.get('_turtle_width');

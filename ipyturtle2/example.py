@@ -8,6 +8,7 @@
 TODO: Add module docstring
 """
 
+from enum import Flag
 from math import sqrt
 from ipywidgets import DOMWidget
 from traitlets import Unicode, Bool, Int, Float, Any
@@ -32,12 +33,13 @@ class TurtleWidget(DOMWidget):
     _is_turtle_on = Bool(True).tag(sync=True)
     _is_pen_on = True
     _is_filling = Bool(False).tag(sync=True)
+    _is_animating = Bool(False).tag(sync=True)
 
     _turtle_height = Int(15).tag(sync=True)
     _turtle_width = Int(10).tag(sync=True)
     _turtle_location_x = Float(0.0).tag(sync=True)
     _turtle_location_y = Float(0.0).tag(sync=True)
-    _turtle_heading = Float(00.0).tag(sync=True)
+    _turtle_heading = Float(90.0).tag(sync=True)
 
     _commands = Any([]).tag(sync=True)
     _color = Unicode('black').tag(sync=True)
@@ -56,6 +58,8 @@ class TurtleWidget(DOMWidget):
     def _reset(self):
         self._is_turtle_on = True
         self._is_pen_on = True
+        self._is_animating = False
+        self._is_filling = False
         self._turtle_location_x = 0
         self._turtle_location_y = 0
         self._turtle_heading = 90.0
@@ -76,6 +80,7 @@ class TurtleWidget(DOMWidget):
             "lineWidth": self._pen_size,
             "fillColor": self._fill_color,
             "isFilling": self._is_filling,
+            "isAnimating": self._is_animating,
             "isPenOn": self._is_pen_on,
             "isTurtleOn": self._is_turtle_on,
             ** command,
@@ -95,6 +100,15 @@ class TurtleWidget(DOMWidget):
         self._push_command({
             "type": "endFill",
         })
+
+    def animating(self):
+        return self._is_animating
+
+    def begin_animation(self):
+        self._is_animating = True
+
+    def end_animation(self):
+        self._is_animating = False
 
     def position(self):
         return self._turtle_location_x, self._turtle_location_y
@@ -247,7 +261,7 @@ class TurtleWidget(DOMWidget):
             math.sin(math.radians(start + 180))
         nextX = centerX + radius * math.cos(math.radians(extent + start))
         nextY = centerY + radius * math.sin(math.radians(extent + start))
-        nextHeading = self._turtle_heading + extent
+        nextHeading = start + extent + 90
         self._turtle_location_x = nextX
         self._turtle_location_y = nextY
         self._turtle_heading = nextHeading

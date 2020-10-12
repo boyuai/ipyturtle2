@@ -26,6 +26,7 @@ interface BaseCommand {
   id: number;
   isPenOn: boolean;
   isFilling: boolean;
+  isAnimating: boolean;
   isTurtleOn: boolean;
   x: number;
   y: number;
@@ -108,6 +109,7 @@ type FillPath =
       startY: number;
       endX: number;
       endY: number;
+      anticlockwise: boolean;
     }
   | {
       type: 'line';
@@ -172,6 +174,7 @@ export class TurtleView extends DOMWidgetView {
     isPenOn: true,
     isFilling: false,
     isTurtleOn: true,
+    isAnimating: false,
     x: 0,
     y: 0,
     heading: 90,
@@ -318,7 +321,7 @@ export class TurtleView extends DOMWidgetView {
           ...command,
           ...afterTurtle,
         });
-        await this.waitFrame(20);
+        if (command.isAnimating) await this.waitFrame(20);
       }
     }
 
@@ -429,6 +432,7 @@ export class TurtleView extends DOMWidgetView {
   }
 
   reset() {
+    this.fillPaths = [];
     this.canvas!.getContext('2d')!.putImageData(
       this.clearImageData as ImageData,
       0,
@@ -477,7 +481,14 @@ export class TurtleView extends DOMWidgetView {
         } else if (p.type === 'line') {
           ctx.lineTo(p.x, p.y);
         } else if (p.type === 'arc') {
-          ctx.arc(p.x, p.y, p.radius, radians(p.start), radians(p.end));
+          ctx.arc(
+            p.x,
+            p.y,
+            p.radius,
+            radians(p.start),
+            radians(p.end),
+            p.anticlockwise
+          );
         }
       });
       ctx.closePath();
@@ -501,7 +512,14 @@ export class TurtleView extends DOMWidgetView {
           ctx.save();
           ctx.strokeStyle = p.color;
           ctx.moveTo(p.startX, p.startY);
-          ctx.arc(p.x, p.y, p.radius, radians(p.start), radians(p.end));
+          ctx.arc(
+            p.x,
+            p.y,
+            p.radius,
+            radians(p.start),
+            radians(p.end),
+            p.anticlockwise
+          );
           ctx.stroke();
           ctx.restore();
           // ctx.closePath();
@@ -545,7 +563,7 @@ export class TurtleView extends DOMWidgetView {
         y,
         heading: heading + d,
       });
-      await this.waitFrame(5);
+      if (command.isAnimating) await this.waitFrame(5);
       this.clearTurtle();
       if (d === degree) {
         break;
@@ -570,7 +588,7 @@ export class TurtleView extends DOMWidgetView {
         y,
         heading: heading - d,
       });
-      await this.waitFrame(20);
+      if (command.isAnimating) await this.waitFrame(20);
 
       this.clearTurtle();
       if (d === degree) {
@@ -630,7 +648,7 @@ export class TurtleView extends DOMWidgetView {
         x,
         y,
       });
-      await this.waitFrame(20);
+      if (command.isAnimating) await this.waitFrame(20);
       this.clearTurtle();
       if (i === distance) {
         break;
@@ -700,21 +718,29 @@ export class TurtleView extends DOMWidgetView {
 
   async drawCircle(command: CircleCommand) {
     let { radius, extent, x, y, heading, isPenOn, isFilling, color } = command;
-    let start = heading - 90;
-    const end = start + extent;
+    // 默认为逆时针，但是因为context会被transform为笛卡尔坐标系，所以绘画时相反，为顺时针
+    let anticlockwise = false;
+    if (extent < 0) {
+      anticlockwise = true;
+    }
+    let start: number, end: number;
+    // if (anticlockwise) {
+    //   start = 90 - heading;
+    // } else {
+    // }
+    start = heading - 90;
+    end = start + extent;
     const centerX = x + radius * Math.cos(radians(start + 180));
     const centerY = y + radius * Math.sin(radians(start + 180));
 
     // 根据速度计算在边长上的运行时长, 向上取整
-    const distance = radians(extent) * radius;
+    const distance = radians(Math.abs(extent)) * radius;
     const times = Math.ceil(distance / this.speed);
     const angleSpeed = extent / times;
     let cur = start;
     let endX;
     let endY;
     for (let t = 0; t < times; t++) {
-      // console.log('drawCircle step', cur);
-
       if (isPenOn) {
         this.drawContext((ctx) => {
           ctx.beginPath();
@@ -723,7 +749,8 @@ export class TurtleView extends DOMWidgetView {
             centerY,
             radius,
             radians(cur),
-            radians(cur + angleSpeed)
+            radians(cur + angleSpeed),
+            anticlockwise
           );
           ctx.stroke();
         });
@@ -738,7 +765,7 @@ export class TurtleView extends DOMWidgetView {
         y: endY,
         heading: cur + 90,
       });
-      await this.waitFrame(20);
+      if (command.isAnimating) await this.waitFrame(20);
       this.clearTurtle();
     }
 
@@ -759,6 +786,7 @@ export class TurtleView extends DOMWidgetView {
         startY: y,
         endX: endX,
         endY: endX,
+        anticlockwise,
       });
     }
     return {
@@ -798,7 +826,7 @@ export class TurtleView extends DOMWidgetView {
         y,
         heading,
       });
-      await this.waitFrame(20);
+      if (command.isAnimating) await this.waitFrame(20);
       this.clearTurtle();
     }
     return {

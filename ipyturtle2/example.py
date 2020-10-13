@@ -50,9 +50,9 @@ class TurtleWidget(DOMWidget):
 
     def __init__(self, width=320, height=320, fixed=True):
         DOMWidget.__init__(self)
-        self.canvas_width = width
-        self.canvas_height = height
-        self.canvas_fixed = fixed
+        self._canvas_width = width
+        self._canvas_height = height
+        self._is_canvas_fixed = fixed
         self._reset()
 
     def _reset(self):

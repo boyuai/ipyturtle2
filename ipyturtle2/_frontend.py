@@ -9,4 +9,4 @@ Information about the frontend package of the widgets.
 """
 
 module_name = "ipyturtle2"
-module_version = "^0.7.4"
+module_version = "^0.7.5"

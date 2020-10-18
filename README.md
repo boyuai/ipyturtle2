@@ -43,10 +43,24 @@ jupyter nbextension enable --py --sys-prefix ipyturtle2
 19. setposition
 20. showturtle
 21. write: move is not supported
+22. color
+23. fillColor
 
 All color params only support colorstring.
 
 For method support request, please open an issue.
+
+## Custom Methods
+1. spiral_circle(steps, start_radius, radius_stride, angle_stride)
+    draw spiral with circle
+2. spiral_forward(steps, start_arc_length, arc_length_stride, angle_stride)
+    draw spiral with forward
+3. animating()
+    return if the turtle is doing animating when drawing, default is False.
+4. begin_animation()
+    let the turtle start animation
+5. end_animation
+    let the turtle stop animation
 
 ## Image Data Hook (pro use)
 

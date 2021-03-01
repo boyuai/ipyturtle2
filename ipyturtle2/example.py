@@ -62,7 +62,7 @@ class TurtleWidget(DOMWidget):
         self._is_filling = False
         self._turtle_location_x = 0
         self._turtle_location_y = 0
-        self._turtle_heading = 90.0
+        self._turtle_heading = 0.0
         self._color = 'black'
         self._fill_color = 'black'
 
@@ -253,6 +253,9 @@ class TurtleWidget(DOMWidget):
             "radius": radius,
             "extent": extent,
         })
+
+        if radius < 0:
+            extent = extent * -1
         # 更新结束时的朝向和位置
         start = self._turtle_heading - 90
         centerX = self._turtle_location_x + radius * \
@@ -261,6 +264,7 @@ class TurtleWidget(DOMWidget):
             math.sin(math.radians(start + 180))
         nextX = centerX + radius * math.cos(math.radians(extent + start))
         nextY = centerY + radius * math.sin(math.radians(extent + start))
+
         nextHeading = start + extent + 90
         self._turtle_location_x = nextX
         self._turtle_location_y = nextY

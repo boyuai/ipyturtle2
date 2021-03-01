@@ -177,7 +177,7 @@ export class TurtleView extends DOMWidgetView {
     isAnimating: false,
     x: 0,
     y: 0,
-    heading: 90,
+    heading: 0,
     color: 'black',
     fillColor: 'black',
     lineWidth: 1,
@@ -600,7 +600,7 @@ export class TurtleView extends DOMWidgetView {
     };
   }
 
-  speed = 10;
+  speed = 5;
 
   async drawLine(command: LineCommand) {
     let { distance, x, y, heading, isPenOn, isFilling, color } = command;
@@ -720,36 +720,35 @@ export class TurtleView extends DOMWidgetView {
     let { radius, extent, x, y, heading, isPenOn, isFilling, color } = command;
     // 默认为逆时针，但是因为context会被transform为笛卡尔坐标系，所以绘画时相反，为顺时针
     let anticlockwise = false;
+    extent = extent * (radius > 0 ? 1 : -1);
+
     if (extent < 0) {
       anticlockwise = true;
     }
     let start: number, end: number;
-    // if (anticlockwise) {
-    //   start = 90 - heading;
-    // } else {
-    // }
     start = heading - 90;
     end = start + extent;
     const centerX = x + radius * Math.cos(radians(start + 180));
     const centerY = y + radius * Math.sin(radians(start + 180));
-
     // 根据速度计算在边长上的运行时长, 向上取整
-    const distance = radians(Math.abs(extent)) * radius;
+    const distance = Math.abs(radians(Math.abs(extent)) * radius);
     const times = Math.ceil(distance / this.speed);
+
     const angleSpeed = extent / times;
     let cur = start;
-    let endX;
-    let endY;
+    let endX: number;
+    let endY: number;
     for (let t = 0; t < times; t++) {
       if (isPenOn) {
+        const offset = radius < 0 ? 180 : 0;
         this.drawContext((ctx) => {
           ctx.beginPath();
           ctx.arc(
             centerX,
             centerY,
-            radius,
-            radians(cur),
-            radians(cur + angleSpeed),
+            Math.abs(radius),
+            radians(cur + offset),
+            radians(cur + angleSpeed + offset),
             anticlockwise
           );
           ctx.stroke();

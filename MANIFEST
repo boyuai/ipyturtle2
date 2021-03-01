@@ -31,7 +31,7 @@ ipyturtle2\__init__.py
 ipyturtle2\_frontend.py
 ipyturtle2\_version.py
 ipyturtle2\example.py
-ipyturtle2\labextension\ipyturtle2-0.7.3.tgz
+ipyturtle2\labextension\ipyturtle2-0.8.0.tgz
 ipyturtle2\nbextension\__init__.py
 ipyturtle2\nbextension\static\extension.js
 ipyturtle2\nbextension\static\index.js
